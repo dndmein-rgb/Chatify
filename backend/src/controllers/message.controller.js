@@ -88,5 +88,7 @@ export const getChatPartners = async (req, res) => {
       _id: { $in: chatPartnerIds },
     }).select("-password");
     res.status(200).json(chatPartners);
-  } catch (error) {}
+  } catch (error) {console.error("Error in getChatPartners: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
