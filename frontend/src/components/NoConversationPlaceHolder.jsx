@@ -1,9 +1,9 @@
 import React from 'react'
 
-const NoConversationPlaceholder = () => {
+const NoConversationPlaceHolder = () => {
   return (
-    <div>NoConversationPlaceholder</div>
+    <div>NoConversationPlaceHolder</div>
   )
 }
 
-export default NoConversationPlaceholder
+export default NoConversationPlaceHolder
