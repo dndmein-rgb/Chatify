@@ -25,9 +25,9 @@ export const getMessagesByUserId = async (req, res) => {
         { senderId: userToChatId, receiverId: myId },
       ],
     }).sort({ createdAt: 1 });
-    res.status(200).json({
-      message,
-    });
+    res.status(200).json(
+      message
+    );
   } catch (error) {
     console.log("Error in getMessagesController", error);
     res.status(500).json({ message: "Internal server error" });
@@ -42,7 +42,7 @@ export const sendMessage = async (req, res) => {
     if(!text && !image){
         return res.status(400).json({message:"Text or image is required"});
     }
-    if(senderId===receiverId){
+    if(senderId.equals(receiverId)){
         return res.status(400).json({message:"You cannot send message to yourself"});   
     }
     const receiverExists=await User.exists({_id:receiverId});
@@ -62,7 +62,7 @@ export const sendMessage = async (req, res) => {
     });
     await newMessage.save();
     //todo send message in real time-socket.io
-    res.status(200).json({ message: "Message sent successfully" });
+    res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessageController", error);
     res.status(500).json({ message: "Internal server error" });

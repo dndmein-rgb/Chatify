@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import { axiosInstance } from "../lib/axios";
 import Toast, { toast } from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 
 
 export const useChatStore=create((set,get)=>({
@@ -16,7 +17,8 @@ export const useChatStore=create((set,get)=>({
     toggleSound:()=>{
         localStorage.setItem("isSoundEnabled",!get().isSoundEnabled);
         set({isSoundEnabled:!get().isSoundEnabled});
-    },setActiveTab:(tab)=>set({activeTab:tab})
+    },
+    setActiveTab:(tab)=>set({activeTab:tab})
     ,setSelectedUser:(selectedUser)=>set({selectedUser}),
     
     getAllContacts:async()=>{
@@ -52,5 +54,36 @@ export const useChatStore=create((set,get)=>({
         }finally{
             set({isMessagesLoading:false});
         }
-    }            
-}))
+    },
+  sendMessage: async (messageData) => {
+  const { selectedUser, messages } = get();
+  const{authUser}=useAuthStore.getState();
+
+  const tempId=`temp-${Date.now()}}`;
+  const optimisticMessage={
+    _id:tempId,
+    senderId:authUser._id,
+    receiverId:selectedUser._id,
+    text:messageData.text,
+    image:messageData.image,
+    createdAt:new Date().toISOString(),
+    isOptimistic:true,
+  };
+  //immediately add the optimistic message
+  set({messages:[...messages,optimisticMessage]});
+
+  try {
+    const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+
+    // ensure messages is always an array
+    const currentMessages = Array.isArray(messages) ? messages : [];
+    const newMessage = res.data;
+
+    set({ messages: [...currentMessages, newMessage] });
+  } catch (error) {
+    set({messages:messages});
+    toast.error(error.response?.data?.message || "Something went wrong");
+    console.log("error in sending message", error);
+  }
+}
+}));
