@@ -8,38 +8,47 @@ import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton";
 import { useRef } from "react";
 
 const ChatContainer = () => {
-  const { selectedUser, getMessagesByUserId, messages,isMessagesLoading } = useChatStore();
+  const {
+    selectedUser,
+    getMessagesByUserId,
+    messages,
+    isMessagesLoading,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
+useEffect(() => {
+  if (!selectedUser?._id) return;
+  getMessagesByUserId(selectedUser._id);
+  subscribeToMessages();
 
+    //clean up
+    return () => 
+      unsubscribeFromMessages();
 
+  }, [selectedUser, getMessagesByUserId, subscribeToMessages, unsubscribeFromMessages]);
   useEffect(() => {
-    if (selectedUser?._id) {
-      getMessagesByUserId(selectedUser._id);
-    }
-  }, [selectedUser, getMessagesByUserId]);
-   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
   if (!selectedUser) return null;
-  
-console.log(messages)
   return (
     <>
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-8">
-        {messages.length > 0 && !isMessagesLoading? (
+        {messages.length > 0 && !isMessagesLoading ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {console.log(messages)}
             {messages.map((msg, index) => (
-        <div
-          key={msg._id || `${msg.senderId}-${msg.createdAt || index}`}
-          className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-        >
-              
+              <div
+                key={msg._id || `${msg.senderId}-${msg.createdAt || index}`}
+                className={`chat ${
+                  msg.senderId === authUser._id ? "chat-end" : "chat-start"
+                }`}
+              >
                 <div
                   className={`chat-bubble relative ${
                     msg.senderId === authUser._id
@@ -56,18 +65,19 @@ console.log(messages)
                   )}
                   {msg.text && <p className="mt-2">{msg.text}</p>}
                   <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
-                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
+                    {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </p>
-
                 </div>
               </div>
             ))}
             <div ref={messageEndRef} />
           </div>
-        ) : isMessagesLoading?(<MessagesLoadingSkeleton/>): (
+        ) : isMessagesLoading ? (
+          <MessagesLoadingSkeleton />
+        ) : (
           <NoChatHistoryPlaceholder name={selectedUser.fullName} />
         )}
       </div>

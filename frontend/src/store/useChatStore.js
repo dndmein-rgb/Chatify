@@ -85,5 +85,29 @@ export const useChatStore=create((set,get)=>({
     toast.error(error.response?.data?.message || "Something went wrong");
     console.log("error in sending message", error);
   }
-}
+},
+    subscribeToMessages:()=>{
+        const {selectedUser,isSoundEnabled}=get();
+        if(!selectedUser) return;
+        const socket=useAuthStore.getState().socket;
+        socket.on("newMessage",(message)=>{
+            const isMessagesFromSelectedUser=
+            message.senderId.toString()===selectedUser._id.toString();
+            if(!isMessagesFromSelectedUser) return;
+        const currentMessages=get().messages;
+        set({messages:[...currentMessages,message]});
+        if(isSoundEnabled){
+            const notificationSound=new Audio("/sounds/notification.mp3");
+            notificationSound.currentTime=0;
+            notificationSound.play().catch((e)=>
+                console.log("Error in playing notification sound",e)
+            );
+        }
+        });
+    },
+        unsubscribeFromMessages:()=>{
+            const socket=useAuthStore.getState().socket;
+            socket.off("newMessage");
+        },
+            
 }));
