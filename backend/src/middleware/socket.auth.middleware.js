@@ -4,6 +4,7 @@ import User from "../models/User.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {
+    //extract token from http-only cookies
     const token = socket.handshake.headers.cookie
       ?.split("; ")
       .find((row) => row.startsWith("jwt="))
@@ -24,6 +25,7 @@ export const socketAuthMiddleware = async (socket, next) => {
         console.log("Socket connection rejected - User not found");
         return next(new Error("Unauthorized - User not found"));
       }
+      //attach user info to socket
       socket.user=user;
       socket.userId=user._id.toString();
       console.log(`Socket authenticated for user ${user.fullName} (${user._id})`)

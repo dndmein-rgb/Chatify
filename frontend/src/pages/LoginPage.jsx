@@ -13,17 +13,17 @@ const LoginPage = () => {
       login(formData);
     };
  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="relative w-full max-w-5xl">
         <BorderAnimatedContainer>
-          <div className="w-full flex flex-col md:flex-row overflow-hidden rounded-2xl">
+          <div className="w-full flex flex-col md:flex-row overflow-hidden rounded-2xl shadow-2xl">
             {/* LEFT - FORM */}
-            <div className="md:w-1/2 p-8 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm border-r border-slate-700/30">
+            <div className="md:w-1/2 p-8 flex items-center justify-center bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
               <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                  <MessageCircleIcon className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-slate-200 mb-2">Welcome back</h2>
-                  <p className="text-slate-400">login to access your account</p>
+                  <MessageCircleIcon className="w-12 h-12 mx-auto text-emerald-600 mb-4" />
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Welcome back</h2>
+                  <p className="text-gray-600 dark:text-gray-400">login to access your account</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -77,14 +77,14 @@ const LoginPage = () => {
             </div>
 
             {/* RIGHT - IMAGE */}
-            <div className="hidden md:flex md:w-1/2 items-center justify-center p-8 bg-gradient-to-bl from-slate-800/30 to-slate-900/10">
+            <div className="hidden md:flex md:w-1/2 items-center justify-center p-8 bg-gradient-to-br from-emerald-500 to-teal-600">
               <div className="text-center">
                 <img
                   src="/login.png"
                   alt="People using mobile devices"
                   className="max-w-full h-auto object-contain mx-auto"
                 />
-                <h3 className="mt-6 text-xl font-medium text-cyan-400">Connect anytime,anywhere</h3>
+                <h3 className="mt-6 text-xl font-medium text-white">Connect anytime, anywhere</h3>
                 <div className="mt-4 flex justify-center gap-4 flex-wrap">
                   <span className="auth-badge">Free</span>
                   <span className="auth-badge">Easy Setup</span>

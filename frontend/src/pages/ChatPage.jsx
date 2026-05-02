@@ -11,25 +11,28 @@ import NoConversationPlaceHolder from "../components/NoConversationPlaceHolder";
 function ChatPage() {
   const { activeTab, selectedUser } = useChatStore();
 
+  const isChatsTab = activeTab === "chats";
+
   return (
     <div className="relative w-full max-w-6xl h-screen">
       <BorderAnimatedContainer>
         {/* LEFT SIDE */}
-        <div className="w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col">
+        <div className="w-80 bg-white dark:bg-gray-900 flex flex-col border-r border-gray-200 dark:border-gray-800">
           <ProfileHeader />
           <ActiveTabSwitch />
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {activeTab === "chats" ? <ChatsList /> : <ContactList />}
+          <div className="flex-1 overflow-y-auto p-2">
+            {isChatsTab ? <ChatsList /> : <ContactList />}
           </div>
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
+        <div className="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900">
           {selectedUser ? <ChatContainer /> : <NoConversationPlaceHolder />}
         </div>
       </BorderAnimatedContainer>
     </div>
   );
 }
+
 export default ChatPage;
